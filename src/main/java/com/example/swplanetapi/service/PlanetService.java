@@ -5,6 +5,7 @@ import com.example.swplanetapi.repository.PlanetRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -24,5 +25,9 @@ public class PlanetService {
 
     public Optional<Planet> getByName(String name) {
         return planetRepository.findByName(name);
+    }
+
+    public List<Planet> getAllPlanetsByFilter(String climate, String terrain) {
+        return planetRepository.findAllByClimateAndTerrain(climate, terrain);
     }
 }

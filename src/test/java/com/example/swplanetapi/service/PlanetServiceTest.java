@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.swplanetapi.utils.PlanetUtils.INVALID_PLANET;
@@ -73,6 +75,23 @@ public class PlanetServiceTest {
     void getPlanet_WithInvalidName_ReturnsEmpty() {
         final String name = "Unexisting name";
         Optional<Planet> response = planetService.getByName(name);
+
+        assertThat(response).isEmpty();
+    }
+
+    @Test
+    void listPlanets_ReturnsAllPlanets() {
+        when(planetRepository.findAllByClimateAndTerrain(PLANET.getClimate(), PLANET.getTerrain())).thenReturn(Collections.singletonList(PLANET));
+
+        List<Planet> response = planetService.getAllPlanetsByFilter(PLANET.getClimate(), PLANET.getTerrain());
+
+        assertThat(response).isNotEmpty();
+        assertThat(response.size()).isEqualTo(1);
+    }
+
+    @Test
+    void listPlanets_ReturnsNoPlanets() {
+        List<Planet> response = planetService.getAllPlanetsByFilter(PLANET.getClimate(), PLANET.getTerrain());
 
         assertThat(response).isEmpty();
     }
