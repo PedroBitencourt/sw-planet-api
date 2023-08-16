@@ -20,6 +20,9 @@ public class PlanetService {
 
     public Optional<Planet> get(Long id) {
         return planetRepository.findById(id);
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Planet doesn't exists"));
+    }
+
+    public Optional<Planet> getByName(String name) {
+        return planetRepository.findByName(name);
     }
 }
