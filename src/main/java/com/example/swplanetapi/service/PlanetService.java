@@ -5,6 +5,8 @@ import com.example.swplanetapi.repository.PlanetRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class PlanetService {
@@ -16,4 +18,8 @@ public class PlanetService {
     }
 
 
+    public Optional<Planet> get(Long id) {
+        return planetRepository.findById(id);
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Planet doesn't exists"));
+    }
 }
