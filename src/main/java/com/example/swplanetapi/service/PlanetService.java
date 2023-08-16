@@ -30,4 +30,8 @@ public class PlanetService {
     public List<Planet> getAllPlanetsByFilter(String climate, String terrain) {
         return planetRepository.findAllByClimateAndTerrain(climate, terrain);
     }
+
+    public void remove(Long id) {
+        planetRepository.deleteById(id);
+    }
 }

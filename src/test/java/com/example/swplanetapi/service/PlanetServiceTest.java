@@ -15,9 +15,11 @@ import java.util.Optional;
 import static com.example.swplanetapi.utils.PlanetUtils.INVALID_PLANET;
 import static com.example.swplanetapi.utils.PlanetUtils.PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,5 +96,19 @@ public class PlanetServiceTest {
         List<Planet> response = planetService.getAllPlanetsByFilter(PLANET.getClimate(), PLANET.getTerrain());
 
         assertThat(response).isEmpty();
+    }
+
+    @Test
+    void removePlanet_WithExistingId_DoesNotThrowAnyException() {
+        assertThatCode(() -> planetService.remove(1L)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void removePlanet_WithUnexistingId_ThrowsException() {
+        final Long invalidId = 4948448L;
+
+        doThrow(new RuntimeException()).when(planetRepository).deleteById(invalidId);
+
+        assertThatThrownBy(() -> planetService.remove(invalidId)).isInstanceOf(RuntimeException.class);
     }
 }
