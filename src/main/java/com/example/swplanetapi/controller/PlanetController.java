@@ -2,6 +2,7 @@ package com.example.swplanetapi.controller;
 
 import com.example.swplanetapi.model.Planet;
 import com.example.swplanetapi.service.PlanetService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class PlanetController {
     private final PlanetService planetService;
 
     @PostMapping
-    public ResponseEntity<Planet> create(@RequestBody Planet planet){
+    public ResponseEntity<Planet> create(@RequestBody @Valid Planet planet){
         Planet planetCreated = planetService.create(planet);
         return ResponseEntity.status(HttpStatus.CREATED).body(planetCreated);
     }
