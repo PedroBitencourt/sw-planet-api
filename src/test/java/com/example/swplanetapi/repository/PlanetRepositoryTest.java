@@ -70,4 +70,20 @@ public class PlanetRepositoryTest {
 
         assertThat(planetOptional).isEmpty();
     }
+
+    @Test
+    void getPlanet_ByExistingName_ReturnsPlanet() {
+        Planet planet = testEntityManager.persistFlushFind(PLANET);
+        Optional<Planet> planetOptional = planetRepository.findByName(planet.getName());
+
+        assertThat(planetOptional).isNotEmpty();
+        assertThat(planetOptional.get()).isEqualTo(planet);
+    }
+
+    @Test
+    void getPlanet_ByUnexistingName_ReturnsNotEmpty() {
+        Optional<Planet> planetOptional = planetRepository.findByName("Unexisting Name");
+
+        assertThat(planetOptional).isEmpty();
+    }
 }
