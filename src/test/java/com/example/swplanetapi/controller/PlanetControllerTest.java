@@ -10,11 +10,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static com.example.swplanetapi.utils.PlanetUtils.EMPTY_PLANET;
 import static com.example.swplanetapi.utils.PlanetUtils.INVALID_PLANET;
 import static com.example.swplanetapi.utils.PlanetUtils.PLANET;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,5 +62,22 @@ public class PlanetControllerTest {
         mockMvc.perform(post("/planets").content(objectMapper.writeValueAsString(PLANET))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    void getPlanet_ByExistingId_ReturnsPlanet() throws Exception {
+        when(planetService.get(1L)).thenReturn(Optional.ofNullable(PLANET));
+
+        mockMvc.perform(get("/planets/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(PLANET));
+    }
+
+    @Test
+    void getPlanet_ByUnexistingId_ReturnsNotFound() throws Exception {
+        when(planetService.get(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/planets/1"))
+                .andExpect(status().isNotFound());
     }
 }
