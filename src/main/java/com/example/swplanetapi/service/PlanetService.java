@@ -27,8 +27,8 @@ public class PlanetService {
         return planetRepository.findByName(name);
     }
 
-    public List<Planet> getAllPlanetsByFilter(String climate, String terrain) {
-        return planetRepository.findAllByClimateAndTerrain(climate, terrain);
+    public List<Planet> list(String climate, String terrain) {
+        return planetRepository.findAll(climate, terrain);
     }
 
     public void remove(Long id) {

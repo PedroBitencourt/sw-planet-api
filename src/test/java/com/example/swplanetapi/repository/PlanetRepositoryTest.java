@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.swplanetapi.utils.PlanetUtils.EMPTY_PLANET;
@@ -86,4 +88,24 @@ public class PlanetRepositoryTest {
 
         assertThat(planetOptional).isEmpty();
     }
+
+    @Sql(scripts = "/import_planets.sql")
+    @Test
+    void listPlanets_ReturnsFilteredPlanets() {
+        List<Planet> responseWithoutFilters = planetRepository.findAll();
+        List<Planet> responseWithFilters = planetRepository.findAll("arid", "desert");
+
+        assertThat(responseWithoutFilters).isNotEmpty();
+        assertThat(responseWithoutFilters).hasSize(3);
+        assertThat(responseWithFilters).isNotEmpty();
+        assertThat(responseWithFilters).hasSize(1);
+    }
+    @Test
+    void listPlanets_ReturnsNoPlanets() {
+        List<Planet> planetList = planetRepository
+                .findAll();
+
+        assertThat(planetList).isEmpty();
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.swplanetapi.controller;
 
+import com.example.swplanetapi.model.Planet;
 import com.example.swplanetapi.service.PlanetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -10,11 +11,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.swplanetapi.utils.PlanetUtils.EMPTY_PLANET;
 import static com.example.swplanetapi.utils.PlanetUtils.INVALID_PLANET;
 import static com.example.swplanetapi.utils.PlanetUtils.PLANET;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -94,5 +98,30 @@ public class PlanetControllerTest {
     void getPlanet_ByUnexistigName_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/planets/name/invalidName"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void listPlanets_ReturnsFilteredPlanets() throws Exception {
+        List<Planet> planets = Collections.singletonList(PLANET);
+        when(planetService.list("climate", "terrain"))
+                .thenReturn(planets);
+
+        mockMvc.perform(get("/planets")
+                        .param("climate", "climate")
+                        .param("terrain", "terrain"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0]").value(PLANET));
+    }
+
+    @Test
+    void listPlanets_ReturnsNoPlanets() throws Exception {
+        when(planetService.list(null, null)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/planets")
+                        .param("climate", "climate")
+                        .param("terrain", "terrain"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }

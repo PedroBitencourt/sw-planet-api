@@ -42,9 +42,9 @@ public class PlanetController {
     }
 
     @GetMapping
-    public List<Planet> getAllPlanets(@RequestParam(required = false) String climate,
-                                      @RequestParam(required = false) String terrain) {
-        return planetService.getAllPlanetsByFilter(climate, terrain);
+    public List<Planet> list(@RequestParam(required = false) String climate,
+                             @RequestParam(required = false) String terrain) {
+        return planetService.list(climate, terrain);
     }
 
     @DeleteMapping("/{id}")

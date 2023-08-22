@@ -83,9 +83,9 @@ public class PlanetServiceTest {
 
     @Test
     void listPlanets_ReturnsAllPlanets() {
-        when(planetRepository.findAllByClimateAndTerrain(PLANET.getClimate(), PLANET.getTerrain())).thenReturn(Collections.singletonList(PLANET));
+        when(planetRepository.findAll(PLANET.getClimate(), PLANET.getTerrain())).thenReturn(Collections.singletonList(PLANET));
 
-        List<Planet> response = planetService.getAllPlanetsByFilter(PLANET.getClimate(), PLANET.getTerrain());
+        List<Planet> response = planetService.list(PLANET.getClimate(), PLANET.getTerrain());
 
         assertThat(response).isNotEmpty();
         assertThat(response.size()).isEqualTo(1);
@@ -93,7 +93,7 @@ public class PlanetServiceTest {
 
     @Test
     void listPlanets_ReturnsNoPlanets() {
-        List<Planet> response = planetService.getAllPlanetsByFilter(PLANET.getClimate(), PLANET.getTerrain());
+        List<Planet> response = planetService.list(PLANET.getClimate(), PLANET.getTerrain());
 
         assertThat(response).isEmpty();
     }
